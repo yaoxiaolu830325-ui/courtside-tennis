@@ -1,6 +1,6 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {scorePoint,makeShot,stepBall,serveOutcome,playerReach,attributeRating}=require('./core.js');
+const {scorePoint,makeShot,stepBall,serveOutcome,playerReach,attributeRating,aiReturnTarget}=require('./core.js');
 test('tennis deuce and advantage never end early',()=>{
  let s={p:3,a:3,server:'p'};
  s=scorePoint(s,'p');assert.deepEqual([s.p,s.a,s.winner],[4,3,null]);
@@ -52,6 +52,19 @@ test('ordinary opponent return from a low contact clears the net',()=>{
  for(let i=0;i<180&&!b.ended&&!b.landed;i++)b=stepBall(b,1/120);
  assert.equal(b.ended,null);
  assert.equal(b.legal,true);
+});
+
+test('beginner opponent returns near the player with a slower readable shot',()=>{
+ const v=aiReturnTarget({x:1.2,z:10},0,0);
+ assert.ok(Math.abs(v.x-1.2)<1.5);
+ assert.ok(v.z>8&&v.z<10.5);
+ assert.ok(v.speed<21);
+});
+test('later opponents hit wider and faster than beginner',()=>{
+ const easy=aiReturnTarget({x:1.2,z:10},0,1);
+ const hard=aiReturnTarget({x:1.2,z:10},4,1);
+ assert.ok(hard.speed>easy.speed);
+ assert.ok(Math.abs(hard.x-1.2)>Math.abs(easy.x-1.2));
 });
 
 test('rating is weighted bounded aggregate of attributes',()=>{

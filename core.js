@@ -6,6 +6,10 @@ function playerReach(a,d,h){if(h>3.1)return false;return d<=0.9+a.reach*0.008+a.
 function scorePoint(s,who){const n={...s,p:s.p+(who==='p'),a:s.a+(who==='a'),winner:null};
  if((n.p>=4||n.a>=4)&&Math.abs(n.p-n.a)>=2)n.winner=n.p>n.a?'p':'a';return n}
 function serveOutcome(x){if(!x.legal)return 'fault';return x.receiverMissed?(x.touched?'winner':'ace'):'rally'}
+function aiReturnTarget(player,level,u){
+ const f=clamp(level/4,0,1),x=clamp((.8-1.55*f)*player.x+(u-.5)*(1.1+2*f),-3.8,3.8);
+ return {x,z:8.4+u*.9+f*.8,speed:17.5+level*1.65};
+}
 function makeShot({from,to,speed,arc,serve=false,serverSide=0}){
  const dx=to.x-from.x,dz=to.z-from.z,d=Math.hypot(dx,dz),flight=d/speed*(1+arc*0.08);
  // Time-of-flight controls loft: solve the vertical launch velocity so the
@@ -26,4 +30,4 @@ function stepBall(ball,dt){if(ball.ended)return ball;let b={...ball},px=b.x,pz=b
  }
  return b;
 }
-if(typeof module!=='undefined')module.exports={G,HALF_W,HALF_L,SERVICE,NET,clamp,attributeRating,playerReach,scorePoint,serveOutcome,makeShot,stepBall};
+if(typeof module!=='undefined')module.exports={G,HALF_W,HALF_L,SERVICE,NET,clamp,attributeRating,playerReach,scorePoint,serveOutcome,aiReturnTarget,makeShot,stepBall};
