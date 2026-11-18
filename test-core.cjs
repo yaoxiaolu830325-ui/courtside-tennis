@@ -47,6 +47,13 @@ test('an opponent can contact a reachable ball at typical service-line distance'
  assert.equal(ok,true);
 });
 
+test('ordinary opponent return from a low contact clears the net',()=>{
+ let b=makeShot({from:{x:0,z:-7,h:.35},to:{x:1,z:9},speed:25,arc:4.5});
+ for(let i=0;i<180&&!b.ended&&!b.landed;i++)b=stepBall(b,1/120);
+ assert.equal(b.ended,null);
+ assert.equal(b.legal,true);
+});
+
 test('rating is weighted bounded aggregate of attributes',()=>{
  let v=attributeRating({speed:80,power:80,control:80,reach:80,stamina:80});
  assert.equal(v,80);
