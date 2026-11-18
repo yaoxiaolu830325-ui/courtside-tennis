@@ -42,6 +42,11 @@ test('reach accounts for character agility and ball height',()=>{
  assert.ok(playerReach({agility:90,reach:80},1.5,1.3)>playerReach({agility:40,reach:40},1.5,1.3));
  assert.equal(playerReach({agility:80,reach:70},1.5,4),false);
 });
+test('an opponent can contact a reachable ball at typical service-line distance',()=>{
+ const ok=playerReach({agility:70,reach:68},1.4,1.2);
+ assert.equal(ok,true);
+});
+
 test('rating is weighted bounded aggregate of attributes',()=>{
  let v=attributeRating({speed:80,power:80,control:80,reach:80,stamina:80});
  assert.equal(v,80);
